@@ -1,0 +1,17 @@
+.form-group.stretch > div{
+    max-width: 100%;
+    margin-top: 8px;
+}
+
+.profile-title-container {
+    display: flex;
+    
+}
+
+.profile-title-container > .profile-img-placeholder {
+    margin: 0 8px;
+}
+
+.profile-title-container > .profile-name {
+    line-height: 40px;
+}
