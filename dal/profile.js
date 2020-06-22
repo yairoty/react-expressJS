@@ -1,7 +1,15 @@
 const mongoUtil = require('../mongoUtil');
+let collection;
 
-const db = mongoUtil.getDb();
-const collection = db.collection('profile');
+async function initProfile(){
+    try {
+        const db = await mongoUtil.getDb();
+        collection = db.collection('profile');
+    }
+    catch(e) {
+        console.error(e);
+    }
+}
 
 async function getAll() {
     return collection.find({}).toArray();
@@ -29,7 +37,7 @@ async function update(profile) {
 }
 
 async function generateProfileId(){
-    const maxProfile = await collection.find({}).sort({id:-1}).limit(1).toArray()
+    const maxProfile = await collection.find({}).sort({id:-1}).limit(1).toArray();
     if(maxProfile.length)
         return maxProfile[0].id + 1;
 
@@ -51,6 +59,7 @@ async function create(profile) {
 }
 
 module.exports = {
+    initProfile,
     getAll,
     get,
     remove,

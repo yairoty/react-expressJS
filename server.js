@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoUtil = require('./mongoUtil');
 const { createProfile, updateProfile, deleteProfile, getProfiles } = require('./model/profile/profile');
+const {initProfile} = require('./dal/profile');
 
-
+// init server
 const app = express();
 
 // middlewares //
@@ -13,6 +14,14 @@ app.use(bodyParser.json());
 app.use((err, req, res, next) => {
   res.sendStatus('500');
 });
+
+const PORT = process.env.PORT || 5000;
+// init db
+mongoUtil.connect()
+         .then(initProfile)
+         .then(() => app.listen(PORT, () => `Server running on port ${PORT}`))
+
+
 
 app.get('/api/profiles', async (req, res) => {
   try {
@@ -46,13 +55,4 @@ app.delete('/api/profile/:id', async (req, res) => {
   await deleteProfile(id);
 
   res.json(id);
-});
-
-const PORT = process.env.PORT || 5000;
-
-mongoUtil.connect((err, client) => {
-  if(err)
-    console.error('failed connecting to mongodb. \n', err);
-  
-  app.listen(PORT, () => `Server running on port ${PORT}`);
 });
